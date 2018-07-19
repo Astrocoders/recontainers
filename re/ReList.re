@@ -32,7 +32,7 @@ module Make = (Config: Config) => {
         list: self.state,
         pull: predicate => self.send(Pull(predicate)),
         map: map => self.send(Map(map)),
-        push: (value, ()) => self.send(Push(value)),
+        push: (value, _) => self.send(Push(value)),
       }),
   };
 };
