@@ -74,7 +74,7 @@ let makeTimeout = () =>
 It manages the state of lists for you
 
 Make
-```reasonml
+```ocaml
 module ReList = ReContainers.ReList.Make({
   type t = { name: string, age: int };
 });
@@ -82,7 +82,7 @@ module ReList = ReContainers.ReList.Make({
 
 Usage
 
-```
+```ocaml
 <ReList initial=[{ name: "Dio Brando", age: 123 }]>
   ...(({ list, pull, push }) => (
     <Wrapper>
