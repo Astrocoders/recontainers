@@ -37,7 +37,9 @@ module ReLoader = ReContainers.Loader.Make({
 });
 ```
 
+
 ```ocaml
+/* Could be a fetch for instance */
 let makeTimeout = () =>
   Js.Promise.make((~resolve, ~reject as _) =>
     Js.Global.setTimeout(() => resolve(. 0), 2000) |> ignore
@@ -45,7 +47,7 @@ let makeTimeout = () =>
 
 <ReLoader>
   ...(
-       (~state, ~load, ~reset as _) =>
+       ({state, load}) =>
          <div className="App">
            <div className="App-header">
              <img src=logo className="App-logo" alt="logo" />

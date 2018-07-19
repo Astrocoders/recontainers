@@ -2,9 +2,8 @@
   "name": "re-containers",
   "version": "1.0.0",
   "description": "Utilitary containers for ReasonReact",
-  "main": "lib/js/re/Foo.js",
   "repository": "git@github.com:Astrocoders/recontainers.git",
-  "author": "Gabriel R. Abreu <grsabreu@gmail.com>",
+  "author": "Astrocoders <hello@astrocoders.com>",
   "license": "MIT",
   "dependencies": {},
   "devDependencies": {

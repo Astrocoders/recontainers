@@ -10,15 +10,13 @@ module Make = (Config: Config) => {
     | Dispatch(Js.Promise.t(Config.t))
     | SetState(state);
 
+  type api = {
+    state,
+    load: Js.Promise.t(Config.t) => unit,
+    reset: unit => unit,
+  };
   let component = ReasonReact.reducerComponent("ReLoader");
-  type children =
-    (
-      ~state: state,
-      ~load: Js.Promise.t(Config.t) => unit,
-      ~reset: unit => unit
-    ) =>
-    ReasonReact.reactElement;
-  let make = (children: children) => {
+  let make = children => {
     ...component,
     initialState: () => Empty,
     reducer: (action, _state) =>
@@ -34,6 +32,7 @@ module Make = (Config: Config) => {
                      self.send(SetState(Success(result))) |> resolve
                    )
                 |> catch(_err => {
+                     /* TODO: give error back to user*/
                      self.send(SetState(Error("Something went wrong")));
                      resolve();
                    })
@@ -47,7 +46,7 @@ module Make = (Config: Config) => {
       let load = promise => self.send(Dispatch(promise));
       let reset = () => self.send(SetState(Empty));
 
-      children(~state=self.state, ~load, ~reset);
+      children({state: self.state, load, reset});
     },
   };
 };
