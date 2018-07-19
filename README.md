@@ -1,6 +1,8 @@
 # ReContainers
 [![Build Status](https://travis-ci.org/Astrocoders/ReContainers.svg?branch=master)](https://travis-ci.org/Astrocoders/ReContainers)
 
+Type safe high order components for ReasonReact
+
 ```
 $ yarn add re-containers
 ```
@@ -16,7 +18,7 @@ Available API
 ## Component
 Nice for lifecycle helpers
 
-```reasonml
+```ocaml
 <Component didMount willUnmount willUpdate>
   ...((self) => {
     <div />
@@ -28,14 +30,14 @@ Nice for lifecycle helpers
 
 Handling promises
 
-```
+```ocaml
 module ReLoader = ReContainers.Loader.Make({
   /* Promise result */
   type t = int;
 });
 ```
 
-```reasonml
+```ocaml
 let makeTimeout = () =>
   Js.Promise.make((~resolve, ~reject as _) =>
     Js.Global.setTimeout(() => resolve(. 0), 2000) |> ignore
@@ -64,4 +66,37 @@ let makeTimeout = () =>
          </div>
      )
 </ReLoader>
+```
+
+## ReList
+It manages the state of lists for you
+
+Make
+```reasonml
+module ReList = ReContainers.ReList.Make({
+  type t = { name: string, age: int };
+});
+```
+
+Usage
+
+```
+<ReList initial=[{ name: "Dio Brando", age: 123 }]>
+  ...(({ list, pull, push }) => (
+    <Wrapper>
+      <CharFormInput onSubmit=(({ values }) => push(values)) />
+
+      (
+        list
+        |> List.map(todo => (
+          <CharItem onDelete=pull(({ age, name }) => char.name == name && char.age == age)>
+            (ReasonReact.string(char.name))
+          </CharItem>
+        ))
+        |> Array.of_list
+        |> ReasonReact.array
+      )
+    </Wrapper>
+  ))
+</ReList>
 ```
