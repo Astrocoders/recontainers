@@ -1,0 +1,20 @@
+{
+  "name": "re-containers",
+  "reason": {
+    "react-jsx": 2
+  },
+  "bs-dependencies": ["reason-react"],
+  "bs-dev-dependencies": ["@glennsl/bs-jest"],
+  "bsc-flags": ["-bs-super-errors"],
+  "refmt": 3,
+  "namespace": true,
+  "sources": [
+    {
+      "dir": "re"
+    },
+    {
+      "dir": "__tests__",
+      "type": "dev"
+    }
+  ]
+}
