@@ -14,12 +14,12 @@ module Make = (Config: Config) => {
     list: state,
     pull: (Config.t => bool) => unit,
     map: (Config.t => Config.t) => unit,
-    push: Config.t => unit,
+    push: (Config.t, unit) => unit,
   };
 
-  let make = children => {
+  let make = (~initial=[], children) => {
     ...component,
-    initialState: () => [],
+    initialState: () => initial,
     reducer: (action, state) =>
       switch (action) {
       | Reset => Update([])
@@ -32,7 +32,7 @@ module Make = (Config: Config) => {
         list: self.state,
         pull: predicate => self.send(Pull(predicate)),
         map: map => self.send(Map(map)),
-        push: value => self.send(Push(value)),
+        push: (value, ()) => self.send(Push(value)),
       }),
   };
 };
