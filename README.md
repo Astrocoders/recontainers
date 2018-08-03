@@ -15,6 +15,26 @@ Inspired by [recompose](https://github.com/acdlite/recompose/), [react-powerplug
 
 Available API
 
+## WithState
+
+```ocaml
+module WithState = ReContainers.WithState.Make({
+  type state = int;
+});
+
+<div>
+  <WithState initialState=0>
+    ...(({ self, send }) => {
+      <div>
+        <p>ReasonReact.string("Count is " ++ string_of_int(self.state))</p>
+        <button onClick=((_) => send(Set(self.state + 1)))>(ReasonReact.string("+"))</button>
+        <button onClick=((_) => send(Set(self.state - 1)))>(ReasonReact.string("+"))</button>
+      </div>
+    })
+  </WithState>
+</div>
+```
+
 ## Component
 Nice for lifecycle helpers
 
