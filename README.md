@@ -1,4 +1,5 @@
 # ReContainers
+
 [![Build Status](https://travis-ci.org/Astrocoders/ReContainers.svg?branch=master)](https://travis-ci.org/Astrocoders/ReContainers)
 
 Type safe high order components for ReasonReact
@@ -7,7 +8,7 @@ Type safe high order components for ReasonReact
 $ yarn add re-containers
 ```
 
-## Inspired by 
+## Inspired by
 
 Inspired by [recompose](https://github.com/acdlite/recompose/), [react-powerplug](https://github.com/renatorib/react-powerplug) and [smalldots](https://github.com/smalldots)
 
@@ -24,11 +25,11 @@ module WithState = ReContainers.WithState.Make({
 
 <div>
   <WithState initialState=0>
-    ...(({ self, send }) => {
+    ...(({ state, send }) => {
       <div>
-        <p>ReasonReact.string("Count is " ++ string_of_int(self.state))</p>
-        <button onClick=((_) => send(Set(self.state + 1)))>(ReasonReact.string("+"))</button>
-        <button onClick=((_) => send(Set(self.state - 1)))>(ReasonReact.string("+"))</button>
+        <p>ReasonReact.string("Count is " ++ string_of_int(state))</p>
+        <button onClick=((_) => send(Set(state + 1)))>(ReasonReact.string("+"))</button>
+        <button onClick=((_) => send(Set(state - 1)))>(ReasonReact.string("+"))</button>
       </div>
     })
   </WithState>
@@ -36,6 +37,7 @@ module WithState = ReContainers.WithState.Make({
 ```
 
 ## Component
+
 Nice for lifecycle helpers
 
 ```ocaml
@@ -56,7 +58,6 @@ module ReLoader = ReContainers.Loader.Make({
   type t = int;
 });
 ```
-
 
 ```ocaml
 /* Could be a fetch for instance */
@@ -91,9 +92,11 @@ let makeTimeout = () =>
 ```
 
 ## ReList
+
 It manages the state of lists for you
 
 Make
+
 ```ocaml
 module ReList = ReContainers.ReList.Make({
   type t = { name: string, age: int };
