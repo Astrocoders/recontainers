@@ -3,7 +3,7 @@ module type Config = {type t;};
 module Make = (Config: Config) => {
   type state =
     | Empty
-    | Loading
+    | Fetching
     | Error(string)
     | Success(Config.t);
   type action =
@@ -15,7 +15,7 @@ module Make = (Config: Config) => {
     load: Js.Promise.t(Config.t) => unit,
     reset: unit => unit,
   };
-  let component = ReasonReact.reducerComponent("ReLoader");
+  let component = ReasonReact.reducerComponent("ReFetcher");
   let make = children => {
     ...component,
     initialState: () => Empty,
@@ -23,7 +23,7 @@ module Make = (Config: Config) => {
       switch (action) {
       | Dispatch(promise) =>
         UpdateWithSideEffects(
-          Loading,
+          Fetching,
           (
             self =>
               Js.Promise.(
