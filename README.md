@@ -16,6 +16,18 @@ Inspired by [recompose](https://github.com/acdlite/recompose/), [react-powerplug
 
 Available API
 
+## Recommended usage
+Composing Render Props is not an easy tasks, that's why we created https://github.com/Astrocoders/bs-epitath to offer a easy syntax do compose your Render Props in an await-async manner.
+
+```ocaml
+let%Epitath myState = c => <WithState> ...c </WithState>;
+let%Epitath mutate = c => <MutationContainer> ...c </MutationContainer>;
+
+myState.send(foo)
+```
+
+[We recommend you reading this article to get started](https://medium.com/astrocoders/render-props-composition-for-reasonml-is-here-b9c004ca9fcb)
+
 ## WithState
 
 ```ocaml
