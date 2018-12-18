@@ -726,10 +726,10 @@ browser-resolve@^1.11.2:
   dependencies:
     resolve "1.1.7"
 
-bs-platform@^4.0.0:
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/bs-platform/-/bs-platform-4.0.0.tgz#4190460550414eecff92f1e2bbaf4d9c557b60af"
-  integrity sha1-QZBGBVBBTuz/kvHiu69NnFV7YK8=
+bs-platform@^4.0.14:
+  version "4.0.14"
+  resolved "https://registry.yarnpkg.com/bs-platform/-/bs-platform-4.0.14.tgz#1d9e9622d59ebf4d39408d07b41997201c5f9750"
+  integrity sha512-bxeMwZPnJ90r48SavF60pkzGn7heaoHn7IF7fpPdh5L8WZfCzf76AikH2zWJii4QahUeInvRN1tNPWQt3ckKJQ==
 
 bser@^2.0.0:
   version "2.0.0"
