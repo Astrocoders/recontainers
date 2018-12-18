@@ -7,9 +7,13 @@
   "license": "MIT",
   "dependencies": {},
   "devDependencies": {
+    "@commitlint/cli": "^7.2.1",
+    "@commitlint/config-conventional": "^7.1.2",
     "@glennsl/bs-jest": "^0.4.0",
     "bs-platform": "^4.0.0",
+    "husky": "^1.2.1",
     "jest": "^22.1.4",
+    "lint-staged": "^8.1.0",
     "reason-react": "^0.4.2"
   },
   "scripts": {
@@ -18,6 +22,19 @@
     "test:watch": "jest --watch",
     "bs:build": "bsb -make-world -clean-world",
     "bs:watch": "bsb -make-world -clean-world -w",
-    "bs:setup": "bsb -make-world"
+    "bs:setup": "bsb -make-world",
+    "lint:staged": "lint-staged"
+  },
+  "lint-staged": {
+    "*.re": [
+      "bsrefmt --in-place",
+      "git add"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run lint:staged",
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+    }
   }
 }
