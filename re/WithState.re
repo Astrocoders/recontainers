@@ -6,9 +6,19 @@ module Make = (Config: Config) => {
 
   let component = ReasonReact.reducerComponent("WithState");
 
-  let make = ( ~initialState, children ) => {
+  let make =
+      (
+        ~initialState,
+        ~didMount=ignore,
+        ~willUpdate=ignore,
+        ~willUnmount=ignore,
+        children,
+      ) => {
     ...component,
     initialState: () => initialState,
+    didMount,
+    willUpdate,
+    willUnmount,
     reducer: (action, _state) =>
       switch (action) {
       | Set(newState) => Update(newState)
@@ -16,4 +26,3 @@ module Make = (Config: Config) => {
     render: self => children(self),
   };
 };
-
