@@ -10,7 +10,7 @@
   "namespace": true,
   "sources": [
     {
-      "dir": "re"
+      "dir": "src"
     },
     {
       "dir": "__tests__",
