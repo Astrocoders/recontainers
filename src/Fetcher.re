@@ -24,21 +24,19 @@ module Make = (Config: Config) => {
       | Dispatch(promise) =>
         UpdateWithSideEffects(
           Fetching,
-          (
-            self =>
-              Js.Promise.(
-                promise
-                |> then_(result =>
-                     self.send(SetState(Success(result))) |> resolve
-                   )
-                |> catch(_err => {
-                     /* TODO: give error back to user*/
-                     self.send(SetState(Error("Something went wrong")));
-                     resolve();
-                   })
-                |> ignore
-              )
-          ),
+          self =>
+            Js.Promise.(
+              promise
+              |> then_(result =>
+                   self.send(SetState(Success(result))) |> resolve
+                 )
+              |> catch(_err => {
+                   /* TODO: give error back to user*/
+                   self.send(SetState(Error("Something went wrong")));
+                   resolve();
+                 })
+              |> ignore
+            ),
         )
       | SetState(state) => Update(state)
       },

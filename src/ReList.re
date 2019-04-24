@@ -24,7 +24,8 @@ module Make = (Config: Config) => {
       switch (action) {
       | Reset => Update([])
       | Push(value) => Update([value, ...state])
-      | Pull(predicate) => Update(List.filter((item) => !predicate(item), state))
+      | Pull(predicate) =>
+        Update(List.filter(item => !predicate(item), state))
       | Map(map) => Update(List.map(map, state))
       },
     render: self =>
