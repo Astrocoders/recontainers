@@ -1,3 +1,6 @@
+# [We strongly suggest for you to use hooks now](https://reasonml.github.io/reason-react/docs/en/components)
+
+
 # ReContainers
 
 [![Build Status](https://travis-ci.org/Astrocoders/ReContainers.svg?branch=master)](https://travis-ci.org/Astrocoders/ReContainers)

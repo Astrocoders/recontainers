@@ -1,9 +1,9 @@
 {
   "name": "re-containers",
   "reason": {
-    "react-jsx": 2
+    "react-jsx": 3
   },
-  "bs-dependencies": ["reason-react"],
+  "bs-dependencies": ["reason-react", "reason-react-compat"],
   "bs-dev-dependencies": ["@glennsl/bs-jest"],
   "bsc-flags": ["-bs-super-errors"],
   "refmt": 3,

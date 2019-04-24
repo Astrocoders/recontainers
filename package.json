@@ -5,16 +5,18 @@
   "repository": "git@github.com:Astrocoders/recontainers.git",
   "author": "Astrocoders <hello@astrocoders.com>",
   "license": "MIT",
-  "dependencies": {},
+  "dependencies": {
+    "reason-react-compat": "^0.2.0"
+  },
   "devDependencies": {
     "@commitlint/cli": "^7.2.1",
     "@commitlint/config-conventional": "^7.1.2",
     "@glennsl/bs-jest": "^0.4.0",
-    "bs-platform": "^4.0.14",
+    "bs-platform": "^5.0.3",
     "husky": "^1.2.1",
     "jest": "^22.1.4",
     "lint-staged": "^8.1.0",
-    "reason-react": "^0.4.2",
+    "reason-react": "^0.7.0",
     "standard-version": "^4.4.0"
   },
   "scripts": {

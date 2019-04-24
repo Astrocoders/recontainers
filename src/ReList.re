@@ -8,8 +8,6 @@ module Make = (Config: Config) => {
     | Pull(Config.t => bool)
     | Map(Config.t => Config.t);
 
-  let component = ReasonReact.reducerComponent("ReList");
-
   type api = {
     list: state,
     pull: (Config.t => bool) => unit,
@@ -17,23 +15,27 @@ module Make = (Config: Config) => {
     push: (Config.t, unit) => unit,
   };
 
-  let make = (~initial=[], children) => {
-    ...component,
-    initialState: () => initial,
-    reducer: (action, state) =>
-      switch (action) {
-      | Reset => Update([])
-      | Push(value) => Update([value, ...state])
-      | Pull(predicate) =>
-        Update(List.filter(item => !predicate(item), state))
-      | Map(map) => Update(List.map(map, state))
-      },
-    render: self =>
-      children({
-        list: self.state,
-        pull: predicate => self.send(Pull(predicate)),
-        map: map => self.send(Map(map)),
-        push: (value, _) => self.send(Push(value)),
-      }),
-  };
+  let component = ReasonReact.reducerComponent("ReList");
+
+  [@react.component]
+  let make = (~initial=[], children) =>
+    ReactCompat.useRecordApi({
+      ...component,
+      initialState: () => initial,
+      reducer: (action, state) =>
+        switch (action) {
+        | Reset => Update([])
+        | Push(value) => Update([value, ...state])
+        | Pull(predicate) =>
+          Update(List.filter(item => !predicate(item), state))
+        | Map(map) => Update(List.map(map, state))
+        },
+      render: self =>
+        children({
+          list: self.state,
+          pull: predicate => self.send(Pull(predicate)),
+          map: map => self.send(Map(map)),
+          push: (value, _) => self.send(Push(value)),
+        }),
+    });
 };

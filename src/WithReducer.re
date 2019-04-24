@@ -10,33 +10,21 @@ module Make = (Config: Config) => {
   type oldNewSelf =
     ReasonReact.oldNewSelf(state, ReasonReact.noRetainedProps, action);
 
-  let component = ReasonReact.reducerComponent("WithState");
+  let component = ReasonReact.reducerComponent("WithReducer");
 
-  let make:
-    (
-      ~initialState: state,
-      ~reducer: (action, state) =>
-                ReasonReact.update(state, ReasonReact.noRetainedProps, action),
-      ~didMount: self => unit=?,
-      ~willUnmount: self => unit=?,
-      ~willUpdate: oldNewSelf => unit=?,
-      'a
-    ) =>
-    ReasonReact.componentSpec(
-      state,
-      state,
-      ReasonReact.noRetainedProps,
-      ReasonReact.noRetainedProps,
-      action,
-    ) =
-    (
-      ~initialState,
-      ~reducer,
-      ~didMount=ignore,
-      ~willUnmount=ignore,
-      ~willUpdate=ignore,
-      children,
-    ) => {
+  [@react.component]
+  let make =
+      (
+        ~initialState: state,
+        ~reducer:
+           (action, state) =>
+           ReasonReact.update(state, ReasonReact.noRetainedProps, action),
+        ~didMount: self => unit=?,
+        ~willUnmount: self => unit=?,
+        ~willUpdate: oldNewSelf => unit=?,
+        ~children,
+      ) =>
+    ReactCompat.useRecordApi({
       ...component,
       initialState: () => initialState,
       didMount,
@@ -44,5 +32,5 @@ module Make = (Config: Config) => {
       willUpdate,
       reducer,
       render: self => children(self),
-    };
+    });
 };
