@@ -50,4 +50,32 @@ module Make = (Config: Config) => {
         children({state: self.state, load, reset});
       },
     });
+  
+  let use = (~promise=?, ()) => {
+    let (state, setState) = React.useState(() => Empty);
+
+    let load = promise => {
+      Js.Promise.(
+        promise
+        |> then_(result => setState(_ => Success(result)) |> resolve)
+        |> catch(_err => {
+             /* TODO: give error back to user */
+             setState(_ => Error("Something went wrong"));
+             resolve();
+           })
+      )
+    };
+
+    let reset = () => setState(_ => Empty);
+
+    React.useEffect0(() => {
+      switch(promise) {
+        | Some(promise) => load(promise) |> ignore
+        | None => ()
+      };
+      None
+    });
+    
+    {state, reset, load}
+  }
 };
