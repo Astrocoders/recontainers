@@ -1,6 +1,6 @@
 {
   "name": "re-containers",
-  "version": "2.0.1",
+  "version": "3.0.0",
   "description": "Utilitary containers for ReasonReact",
   "repository": "git@github.com:Astrocoders/recontainers.git",
   "author": "Astrocoders <hello@astrocoders.com>",
