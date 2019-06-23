@@ -1,81 +1,44 @@
-module type Config = {type t;};
+type state('a) =
+  | Empty
+  | Fetching
+  | Error(string)
+  | Success('a);
 
-module Make = (Config: Config) => {
-  type state =
-    | Empty
-    | Fetching
-    | Error(string)
-    | Success(Config.t);
-  type action =
-    | Dispatch(Js.Promise.t(Config.t))
-    | SetState(state);
+type action('a) =
+  | Dispatch(Js.Promise.t('a))
+  | SetState(state('a));
 
-  type api = {
-    state,
-    load: Js.Promise.t(Config.t) => unit,
-    reset: unit => unit,
+type api('a) = {
+  state: state('a),
+  load: Js.Promise.t('a) => unit,
+  reset: unit => unit,
+};
+
+let use = (~promise=?, ()) => {
+  let (state, setState) = React.useState(() => Empty);
+
+  let load = promise => {
+    Js.Promise.(
+      promise
+      |> then_(result => setState(_ => Success(result)) |> resolve)
+      |> catch(_err => {
+           /* TODO: give error back to user */
+           setState(_ => Error("Something went wrong"));
+           resolve();
+         })
+      |> ignore
+    );
   };
 
-  let component = ReasonReact.reducerComponent("ReFetcher");
-  [@react.component]
-  let make = (~children) =>
-    ReactCompat.useRecordApi({
-      ...component,
-      initialState: () => Empty,
-      reducer: (action, _state) =>
-        switch (action) {
-        | Dispatch(promise) =>
-          UpdateWithSideEffects(
-            Fetching,
-            self =>
-              Js.Promise.(
-                promise
-                |> then_(result =>
-                     self.send(SetState(Success(result))) |> resolve
-                   )
-                |> catch(_err => {
-                     /* TODO: give error back to user*/
-                     self.send(SetState(Error("Something went wrong")));
-                     resolve();
-                   })
-                |> ignore
-              ),
-          )
-        | SetState(state) => Update(state)
-        },
-      render: self => {
-        let load = promise => self.send(Dispatch(promise));
-        let reset = () => self.send(SetState(Empty));
+  let reset = () => setState(_ => Empty);
 
-        children({state: self.state, load, reset});
-      },
-    });
-  
-  let use = (~promise=?, ()) => {
-    let (state, setState) = React.useState(() => Empty);
-
-    let load = promise => {
-      Js.Promise.(
-        promise
-        |> then_(result => setState(_ => Success(result)) |> resolve)
-        |> catch(_err => {
-             /* TODO: give error back to user */
-             setState(_ => Error("Something went wrong"));
-             resolve();
-           })
-      )
+  React.useEffect0(() => {
+    switch (promise) {
+    | Some(promise) => load(promise) |> ignore
+    | None => ()
     };
+    None;
+  });
 
-    let reset = () => setState(_ => Empty);
-
-    React.useEffect0(() => {
-      switch(promise) {
-        | Some(promise) => load(promise) |> ignore
-        | None => ()
-      };
-      None
-    });
-    
-    {state, reset, load}
-  }
+  {state, reset, load};
 };
