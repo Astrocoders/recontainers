@@ -1,12 +1,17 @@
-let component = ReasonReact.statelessComponent("ReComponent");
+let use = (~willUnmount=ignore, ~willUpdate=ignore, ~didMount=ignore, ()) => {
+  React.useEffect0(() => {
+    didMount();
+    Some(willUnmount);
+  });
+  React.useEffect(() => {
+    willUpdate();
+    None;
+  });
+};
 
 [@react.component]
 let make =
-    (~willUnmount=ignore, ~willUpdate=ignore, ~didMount=ignore, ~children) =>
-  ReactCompat.useRecordApi({
-    ...component,
-    didMount,
-    willUpdate,
-    willUnmount,
-    render: self => children(self),
-  });
+    (~willUnmount=ignore, ~willUpdate=ignore, ~didMount=ignore, ~children, ()) => {
+  use(~willUnmount, ~willUpdate, ~didMount, ());
+  children();
+};

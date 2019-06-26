@@ -1,41 +1,38 @@
-module type Config = {type t;};
+type state('a) = list('a);
+type action('a, 'b) =
+  | Reset
+  | Push('a)
+  | Pull('a => bool)
+  | Map('a => 'b);
 
-module Make = (Config: Config) => {
-  type state = list(Config.t);
-  type action =
-    | Reset
-    | Push(Config.t)
-    | Pull(Config.t => bool)
-    | Map(Config.t => Config.t);
+type api('a, 'b) = {
+  list: state('a),
+  pull: ('a => bool) => unit,
+  map: ('a => 'b) => unit,
+  push: ('a, unit) => unit,
+};
 
-  type api = {
+let use = (~initial) => {
+  let (state, send) =
+    React.useReducer(
+      state =>
+        fun
+        | Reset => []
+        | Push(value) => [value, ...state]
+        | Pull(predicate) => List.filter(item => !predicate(item), state)
+        | Map(map) => List.map(map, state),
+      initial,
+    );
+  {
     list: state,
-    pull: (Config.t => bool) => unit,
-    map: (Config.t => Config.t) => unit,
-    push: (Config.t, unit) => unit,
+    pull: predicate => send(Pull(predicate)),
+    map: map => send(Map(map)),
+    push: (value, _) => send(Push(value)),
   };
+};
 
-  let component = ReasonReact.reducerComponent("ReList");
-
-  [@react.component]
-  let make = (~initial=[], children) =>
-    ReactCompat.useRecordApi({
-      ...component,
-      initialState: () => initial,
-      reducer: (action, state) =>
-        switch (action) {
-        | Reset => Update([])
-        | Push(value) => Update([value, ...state])
-        | Pull(predicate) =>
-          Update(List.filter(item => !predicate(item), state))
-        | Map(map) => Update(List.map(map, state))
-        },
-      render: self =>
-        children({
-          list: self.state,
-          pull: predicate => self.send(Pull(predicate)),
-          map: map => self.send(Map(map)),
-          push: (value, _) => self.send(Push(value)),
-        }),
-    });
+[@react.component]
+let make = (~initial=[], children) => {
+  let api = use(~initial);
+  children(api);
 };

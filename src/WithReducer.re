@@ -6,31 +6,36 @@ module type Config = {
 module Make = (Config: Config) => {
   open Config;
 
-  type self = ReasonReact.self(state, ReasonReact.noRetainedProps, action);
-  type oldNewSelf =
-    ReasonReact.oldNewSelf(state, ReasonReact.noRetainedProps, action);
-
-  let component = ReasonReact.reducerComponent("WithReducer");
+  type interface = {
+    state: Config.state,
+    send: action => unit,
+  };
 
   [@react.component]
   let make =
       (
         ~initialState: state,
-        ~reducer:
-           (action, state) =>
-           ReasonReact.update(state, ReasonReact.noRetainedProps, action),
-        ~didMount: self => unit=?,
-        ~willUnmount: self => unit=?,
-        ~willUpdate: oldNewSelf => unit=?,
+        ~reducer,
+        ~didMount: interface => unit=?,
+        ~willUnmount: unit => unit=?,
+        ~willUpdate: interface => unit=?,
         ~children,
-      ) =>
-    ReactCompat.useRecordApi({
-      ...component,
-      initialState: () => initialState,
-      didMount,
-      willUnmount,
-      willUpdate,
-      reducer,
-      render: self => children(self),
+        (),
+      ) => {
+    let (state, send) =
+      React.useReducer(
+        (state, action) => reducer(action, state),
+        initialState,
+      );
+    let self = {state, send};
+    React.useEffect0(() => {
+      didMount(self);
+      Some(willUnmount);
     });
+    React.useEffect(() => {
+      willUpdate(self);
+      None;
+    });
+    children(self);
+  };
 };

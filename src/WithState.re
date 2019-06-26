@@ -4,7 +4,10 @@ module Make = (Config: Config) => {
   type action =
     | Set(Config.state);
 
-  let component = ReasonReact.reducerComponent("WithState");
+  type interface = {
+    state: Config.state,
+    send: action => unit,
+  };
 
   [@react.component]
   let make =
@@ -14,17 +17,18 @@ module Make = (Config: Config) => {
         ~willUpdate=ignore,
         ~willUnmount=ignore,
         ~children,
-      ) =>
-    ReactCompat.useRecordApi({
-      ...component,
-      initialState: () => initialState,
-      didMount,
-      willUpdate,
-      willUnmount,
-      reducer: (action, _state) =>
-        switch (action) {
-        | Set(newState) => Update(newState)
-        },
-      render: self => children(self),
-    });
+        (),
+      ) => {
+    let (state, send) =
+      React.useReducer(
+        _ =>
+          fun
+          | Set(newState) => newState,
+        initialState,
+      );
+
+    Component.use(~willUnmount, ~willUpdate, ~didMount, ());
+
+    children({state, send});
+  };
 };
