@@ -16,9 +16,9 @@ module Make = (Config: Config) => {
       (
         ~initialState: state,
         ~reducer,
-        ~didMount: interface => unit=?,
-        ~willUnmount: unit => unit=?,
-        ~willUpdate: interface => unit=?,
+        ~didMount: interface => unit=ignore,
+        ~willUnmount: unit => unit=ignore,
+        ~willUpdate: interface => unit=ignore,
         ~children,
         (),
       ) => {
