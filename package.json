@@ -15,7 +15,7 @@
     "jest": "^22.1.4",
     "lint-staged": "^8.1.0",
     "reason-react": "^0.7.0",
-    "standard-version": "^4.4.0"
+    "standard-version": "^8.0.1"
   },
   "peerDependencies": {
     "reason-react": "^0.7.0"
